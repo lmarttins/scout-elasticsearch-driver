@@ -22,7 +22,7 @@ class AwsElasticServiceProvider extends ServiceProvider
             $provider = CredentialProvider::fromCredentials($credentials);
 
             $handler = new ElasticsearchPhpHandler(
-                config('scout_elastic.client.aws.region'),
+                config('scout_elastic.connections.aws.region'),
                 $provider
             );
             
