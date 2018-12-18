@@ -11,11 +11,6 @@ use Elasticsearch\ClientBuilder as ElasticBuilder;
 
 class AwsElasticServiceProvider extends ServiceProvider
 {
-    public function boot()
-    {
-        //
-    }
-
     public function register()
     {
         if (config('scout_elastic.driver') === 'aws') {

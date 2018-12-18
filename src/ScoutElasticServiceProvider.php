@@ -58,7 +58,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->register(HostElasticServiceProvider::class);
+        $this->app->register(HashElasticServiceProvider::class);
         $this->app->register(AwsElasticServiceProvider::class);
     }
 }

@@ -1,12 +1,10 @@
 <?php
 
 return [
-    'driver' => env('ELASTIC_DRIVER', 'host'),
-
+    'driver' => env('ELASTIC_DRIVER', 'hash'),
     'update_mapping' => env('SCOUT_ELASTIC_UPDATE_MAPPING', true),
     'indexer' => env('SCOUT_ELASTIC_INDEXER', 'single'),
     'document_refresh' => env('SCOUT_ELASTIC_DOCUMENT_REFRESH'),
-
     'connections' => [
         'host' => [
             'hosts' => [
