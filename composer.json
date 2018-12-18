@@ -23,7 +23,8 @@
     "require": {
         "php": ">=7.1.3",
         "elasticsearch/elasticsearch": "6.*",
-        "laravel/scout": "6.*"
+        "laravel/scout": "6.*",
+        "jsq/amazon-es-php": "^0.2.3"
     },
     "require-dev": {
         "phpunit/phpunit": "7.*",

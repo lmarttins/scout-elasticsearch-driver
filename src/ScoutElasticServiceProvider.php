@@ -2,9 +2,7 @@
 
 namespace ScoutElastic;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
-use Elasticsearch\ClientBuilder;
 use InvalidArgumentException;
 use ScoutElastic\Console\ElasticIndexCreateCommand;
 use ScoutElastic\Console\ElasticIndexDropCommand;
@@ -60,11 +58,7 @@ class ScoutElasticServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this
-            ->app
-            ->singleton('scout_elastic.client', function() {
-                $config = Config::get('scout_elastic.client');
-                return ClientBuilder::fromConfig($config);
-            });
+        $this->app->register(HostElasticServiceProvider::class);
+        $this->app->register(AwsElasticServiceProvider::class);
     }
 }
