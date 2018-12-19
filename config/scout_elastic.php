@@ -6,7 +6,7 @@ return [
     'indexer' => env('SCOUT_ELASTIC_INDEXER', 'single'),
     'document_refresh' => env('SCOUT_ELASTIC_DOCUMENT_REFRESH'),
     'connections' => [
-        'host' => [
+        'hash' => [
             'hosts' => [
                 env('SCOUT_ELASTIC_HOST', 'localhost:9200')
             ]
