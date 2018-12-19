@@ -1,6 +1,6 @@
 <?php
 
-namespace ScoutElastic;
+namespace ScoutElastic\Providers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
@@ -12,7 +12,7 @@ class HashElasticServiceProvider extends ServiceProvider
     {
         if (config('scout_elastic.driver') === 'hash') {
             $this->app->singleton('scout_elastic.client', function () {
-                $config = Config::get('scout_elastic.connections.host');
+                $config = Config::get('scout_elastic.connections.hash');
                 return ClientBuilder::fromConfig($config);
             });
         }

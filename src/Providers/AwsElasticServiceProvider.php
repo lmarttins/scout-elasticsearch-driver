@@ -1,6 +1,6 @@
 <?php
 
-namespace ScoutElastic;
+namespace ScoutElastic\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use ScoutElastic\Builders;
@@ -22,7 +22,7 @@ class AwsElasticServiceProvider extends ServiceProvider
             $provider = CredentialProvider::fromCredentials($credentials);
 
             $handler = new ElasticsearchPhpHandler(config('scout_elastic.client.aws.region'), $provider);
-            
+
             $this->app->singleton('scout_elastic.client', function () use ($handler) {
                 return ElasticBuilder::create()
                     ->setHandler($handler)
