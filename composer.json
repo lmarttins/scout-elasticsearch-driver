@@ -39,7 +39,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "ScoutElastic\\ScoutElasticServiceProvider"
+                "ScoutElastic\\Providers\\ScoutElasticServiceProvider"
             ]
         }
     }
