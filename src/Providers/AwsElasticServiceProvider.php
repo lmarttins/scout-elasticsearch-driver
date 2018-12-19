@@ -2,6 +2,7 @@
 
 namespace ScoutElastic\Providers;
 
+use Elasticsearch\ClientBuilder;
 use Illuminate\Support\ServiceProvider;
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;
@@ -25,7 +26,7 @@ class AwsElasticServiceProvider extends ServiceProvider
             );
 
             $this->app->singleton('scout_elastic.client', function () use ($handler) {
-                return ElasticBuilder::create()
+                return ClientBuilder::create()
                     ->setHandler($handler)
                     ->setHosts([config('scout_elastic.connections.aws.hosts')])
                     ->build();
