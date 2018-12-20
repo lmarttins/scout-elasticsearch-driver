@@ -13,6 +13,7 @@ use ScoutElastic\Console\IndexConfiguratorMakeCommand;
 use ScoutElastic\Console\SearchableModelMakeCommand;
 use Laravel\Scout\EngineManager;
 use ScoutElastic\Console\SearchRuleMakeCommand;
+use ScoutElastic\ElasticEngine;
 
 class ScoutElasticServiceProvider extends ServiceProvider
 {
