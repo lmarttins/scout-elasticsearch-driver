@@ -346,6 +346,38 @@ class FilterBuilder extends Builder
 
         return $this;
     }
+
+    /**
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/nested.html Querying Nested
+     *
+     * @param string $path
+     * @param array $fields
+     * @return $this
+     */
+    public function whereNested($path, array $fields) {
+        $matches = [];
+
+        foreach ($fields as $field => $value) {
+            $matches[] = [
+                'match' => [
+                    "{$path}.{$field}" => $value
+                ]
+            ];
+        }
+
+        $this->wheres['must'][] = [
+            'nested' => [
+                'path' => $path,
+                'query' => [
+                    'bool' => [
+                        'must' => $matches
+                    ]
+                ]
+            ]
+        ];
+
+        return $this;
+    }
     
     /**
      * @param string $field

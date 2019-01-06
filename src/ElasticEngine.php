@@ -31,6 +31,11 @@ class ElasticEngine extends Engine
     static protected $updatedMappings = [];
 
     /**
+     * @var bool
+     */
+    private $existsClauseNested = false;
+
+    /**
      * @param IndexerInterface $indexer
      * @param $updateMapping
      */
@@ -113,8 +118,21 @@ class ElasticEngine extends Engine
                 $payloadCollection->push($payload);
             }
         } else {
-            $payload = (new TypePayload($builder->model))
-                ->setIfNotEmpty('body.query.bool.must.match_all', new stdClass());
+
+            $self = $this;
+
+            $payload = (new TypePayload($builder->model));
+
+            collect($builder->wheres['must'])->each(function ($item, $key) use ($self) {
+                if (array_key_exists('nested', $item)) {
+                    $self->existsClauseNested = true;
+                }
+            });
+
+            if (! $self->existsClauseNested) {
+                $payload = (new TypePayload($builder->model))
+                    ->setIfNotEmpty('body.query.bool.must.match_all', new stdClass());
+            }
 
             $payloadCollection->push($payload);
         }
