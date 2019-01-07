@@ -254,6 +254,45 @@ class FilterBuilderTest extends AbstractTestCase
         );
     }
 
+    public function testWhereNested()
+    {
+        $builder = (new FilterBuilder($this->mockModel()))
+            ->whereNested('foo', [
+                'bar' => 1,
+                'baz' => 2
+            ]);
+
+        $this->assertEquals(
+            [
+                'must' => [
+                    0 => [
+                        'nested' => [
+                            'path' => 'foo',
+                            'query' => [
+                                'bool' => [
+                                    'must' => [
+                                        0 => [
+                                            'match' => [
+                                                'foo.bar' => 1
+                                            ]
+                                        ],
+                                        1 => [
+                                            'match' => [
+                                                'foo.baz' => 2
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                'must_not' => []
+            ],
+            $builder->wheres
+        );
+    }
+
     public function testWhen()
     {
         $builder = (new FilterBuilder($this->mockModel()))
