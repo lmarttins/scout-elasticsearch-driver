@@ -213,6 +213,80 @@ class ElasticEngineTest extends AbstractTestCase
         );
     }
 
+    public function testBuildFilterQueryWithClauseNestedPayloadCollection()
+    {
+        $model = $this->mockModel();
+
+        $filterBuilder = (new FilterBuilder($model))
+            ->where('foo', 'bar')
+            ->whereNested('foo', [
+                'bar' => 1,
+                'baz' => 2
+            ])
+            ->orderBy('foo', 'desc')
+            ->take(1)
+            ->from(30);
+
+        $payloadCollection = $this
+            ->engine
+            ->buildSearchQueryPayloadCollection($filterBuilder);
+
+        $this->assertEquals(
+            [
+                [
+                    'index' => 'test',
+                    'type' => 'test',
+                    'body' => [
+                        'query' => [
+                            'bool' => [
+                                'filter' => [
+                                    'bool' => [
+                                        'must' => [
+                                            [
+                                                'term' => [
+                                                    'foo' => 'bar'
+                                                ]
+                                            ],
+                                            [
+                                                'nested' => [
+                                                    'path' => 'foo',
+                                                    'query' => [
+                                                        'bool' => [
+                                                            'must' => [
+                                                                [
+                                                                    'match' => [
+                                                                        'foo.bar' => 1
+                                                                    ]
+                                                                ],
+                                                                [
+                                                                    'match' => [
+                                                                        'foo.baz' => 2
+                                                                    ]
+                                                                ]
+                                                            ]
+                                                        ]
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'sort' => [
+                            [
+                                'foo' => 'desc'
+                            ]
+                        ],
+                        'from' => 30,
+                        'size' => 1
+                    ],
+                ]
+            ],
+            $payloadCollection->all()
+        );
+    }
+
     public function testCount()
     {
         ElasticClient
