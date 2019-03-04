@@ -379,17 +379,38 @@ class FilterBuilder extends Builder
         return $this;
     }
 
-    public function whereNestedWithRange($path, array $fieldValue, array $range) {
-        $must = [];
+    /**
+     * @param $path
+     * @param $fieldMatch
+     * @param $valueMatch
+     * @param $rangeField
+     * @param array $range
+     * @return $this
+     */
+    public function whereNestedWithRange(
+        $path,
+        $fieldMatch,
+        $valueMatch,
+        $rangeField,
+        array $range
+    ) {
+        list($min, $max) = $range;
 
-        foreach ($fieldValue as $field => $value) {
-            $must[] = [
+        $must[] = [
+            [
                 'match' => [
-                    "{$path}.{$field}" => $value
-                ],
-                'range' => $range
-            ];
-        }
+                    "{$path}.{$fieldMatch}" => $valueMatch
+                ]
+            ],
+            [
+                'range' => [
+                    "{$path}.{$rangeField}" => [
+                        'gte' => $min,
+                        'lte' => $max
+                    ]
+                ]
+            ]
+        ];
 
         $this->wheres['must'][] = [
             'nested' => [
