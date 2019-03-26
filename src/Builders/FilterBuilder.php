@@ -326,7 +326,7 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
+
     /**
      * @see https://www.elastic.co/guide/en/elasticsearch/guide/current/querying-geo-shapes.html Querying Geo Shapes
      *
@@ -384,7 +384,8 @@ class FilterBuilder extends Builder
      * @param $fieldMatch
      * @param $valueMatch
      * @param $rangeField
-     * @param array $range
+     * @param string $operator
+     * @param array $values
      * @return $this
      */
     public function whereNestedWithRange(
@@ -392,9 +393,61 @@ class FilterBuilder extends Builder
         $fieldMatch,
         $valueMatch,
         $rangeField,
-        array $range
+        $operator,
+        array $values
     ) {
-        list($min, $max) = $range;
+        list($min, $max) = $values;
+
+        $range = [];
+
+        switch ($operator) {
+            case '>':
+                $range = [
+                    'range' => [
+                        "{$path}.{$rangeField}" => [
+                            'gt' => $min
+                        ]
+                    ]
+                ];
+                break;
+            case '<':
+                $range = [
+                    'range' => [
+                        "{$path}.{$rangeField}" => [
+                            'lt' => $min
+                        ]
+                    ]
+                ];
+                break;
+            case '>=':
+                $range = [
+                    'range' => [
+                        "{$path}.{$rangeField}" => [
+                            'gte' => $min
+                        ]
+                    ]
+                ];
+                break;
+            case '<=':
+                $range = [
+                    'range' => [
+                        "{$path}.{$rangeField}" => [
+                            'lte' => $min
+                        ]
+                    ]
+                ];
+                break;
+            default:
+                $range = [
+                    'range' => [
+                        "{$path}.{$rangeField}" => [
+                            'gte' => $min,
+                            'lte' => $max
+                        ]
+                    ]
+                ];
+                break;
+        }
 
         $must[] = [
             [
@@ -402,14 +455,7 @@ class FilterBuilder extends Builder
                     "{$path}.{$fieldMatch}" => $valueMatch
                 ]
             ],
-            [
-                'range' => [
-                    "{$path}.{$rangeField}" => [
-                        'gte' => $min,
-                        'lte' => $max
-                    ]
-                ]
-            ]
+            $range
         ];
 
         $this->wheres['must'][] = [
@@ -425,7 +471,7 @@ class FilterBuilder extends Builder
 
         return $this;
     }
-    
+
     /**
      * @param string $field
      * @param string $direction
